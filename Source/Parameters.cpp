@@ -30,8 +30,9 @@ double Parameters::calculateCoefficient(double timeMs) const
     if (timeMs <= 0.0 || sampleRate <= 0.0)
         return 0.0;
     
-    // One-pole filter coefficient: 1 - exp(-1 / (sampleRate * timeSeconds))
-    return 1.0 - std::exp(-1.0 / (sampleRate * timeMs * 0.001));
+    // One-pole filter coefficient: exp(-1 / (sampleRate * timeSeconds))
+    // This gives values close to 1.0 for slow (long times) and close to 0.0 for fast (short times)
+    return std::exp(-1.0 / (sampleRate * timeMs * 0.001));
 }
 
 //==============================================================================

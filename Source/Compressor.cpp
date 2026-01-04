@@ -40,9 +40,11 @@ float Compressor::computeGainReduction(float inputLevel)
     float inputDb = juce::Decibels::gainToDecibels(std::max(inputLevel, minLevel));
 
     // Envelope follower (one-pole filter) using SMOOTHED coefficients
-    // Attack when input is higher, release when lower
+    // Attack when input is higher than envelope, release when lower
+    // Formula: envelope = input + coeff * (envelope - input)
+    // Where coeff close to 1.0 = slow, coeff close to 0.0 = fast
     double coeff = (inputDb > envelope) ? smoothedAttackCoeff : smoothedReleaseCoeff;
-    envelope = coeff * inputDb + (1.0 - coeff) * envelope;
+    envelope = inputDb + coeff * (envelope - inputDb);
 
     // Compute gain reduction based on envelope
     float gainReductionDb = computeGainReductionDb(static_cast<float>(envelope));
