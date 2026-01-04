@@ -18,7 +18,10 @@ void Parameters::setSampleRate(double newSampleRate)
     sampleRate = newSampleRate;
     
     // Calculate smoothing coefficient for ~30ms smoothing time
-    smoothingCoeff = calculateCoefficient(30.0);
+    // Note: For smoothing we need (1 - exp) since we use it as a speed coefficient
+    // Formula: smoothed += coeff * (target - smoothed)
+    // This requires coeff close to 0 for slow smoothing, close to 1 for fast
+    smoothingCoeff = 1.0 - std::exp(-1.0 / (sampleRate * 0.030));  // 30ms
     
     // Force update of all coefficients
     update();
