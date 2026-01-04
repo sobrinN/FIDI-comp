@@ -232,6 +232,12 @@ void FIDICompProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
         outputL *= makeupGain;
         outputR *= makeupGain;
 
+        // Safety: prevent NaN/Inf in output (can occur with extreme settings)
+        if (std::isnan(outputL) || std::isinf(outputL))
+            outputL = 0.0f;
+        if (std::isnan(outputR) || std::isinf(outputR))
+            outputR = 0.0f;
+
         // Write output
         leftChannel[sample] = outputL;
         if (rightChannel != nullptr)

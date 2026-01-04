@@ -56,6 +56,13 @@ float Compressor::computeGainReduction(float inputLevel)
     // We need to return a multiplier < 1.0
     float gainReduction = juce::Decibels::decibelsToGain(-gainReductionDb);
 
+    // Safety check: prevent NaN/Inf (can occur with extreme parameter values)
+    if (std::isnan(gainReduction) || std::isinf(gainReduction))
+        gainReduction = 1.0f;
+    
+    // Clamp to valid range [0.0, 1.0] for safety
+    gainReduction = std::clamp(gainReduction, 0.0f, 1.0f);
+
     return gainReduction;
 }
 
