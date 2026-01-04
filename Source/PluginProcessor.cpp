@@ -11,8 +11,7 @@ FIDICompProcessor::FIDICompProcessor()
                      .withOutput("Output", juce::AudioChannelSet::stereo(), true)),
       apvts(*this, nullptr, stateIdentifier, createParameterLayout()),
       parameters(apvts),
-      compressorL(parameters),
-      compressorR(parameters)
+      compressor(parameters)
 {
 }
 
@@ -142,8 +141,7 @@ void FIDICompProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
     juce::ignoreUnused(samplesPerBlock);
     
     parameters.setSampleRate(sampleRate);
-    compressorL.reset();
-    compressorR.reset();
+    compressor.reset();
     gainReductionAtomic.store(1.0f);
 }
 
@@ -209,12 +207,12 @@ void FIDICompProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::Mid
 
         // Compute gain reduction (both channels get same GR for stereo linking)
         // This also updates smoothed mix and makeup values
-        float gainReduction = compressorL.computeGainReduction(linkedLevel);
+        float gainReduction = compressor.computeGainReduction(linkedLevel);
 
         // Get per-sample smoothed values (prevents zipper noise)
-        float mixAmount = compressorL.getSmoothedMix();
+        float mixAmount = compressor.getSmoothedMix();
         float dryAmount = 1.0f - mixAmount;
-        float makeupGain = compressorL.getSmoothedMakeup();
+        float makeupGain = compressor.getSmoothedMakeup();
 
         // Track minimum for metering
         if (gainReduction < minGainReduction)

@@ -13,16 +13,16 @@
 
 ---
 
-## ✨ Features
+## Features
 
-- **Stereo-Linked Detection** – Consistent stereo image using max of L/R channels
-- **Soft Knee Compression** – Smooth transition with adjustable knee width
-- **Parallel Compression** – Built-in dry/wet mix control
-- **Per-Sample Parameter Smoothing** – Zero zipper noise on all controls
-- **Real-Time GR Meter** – 16-segment LED-style visualization
-- **Modern Dark UI** – Vibrant cyan accent with glow effects
+- **Stereo-Linked Detection** - Consistent stereo image using max of L/R channels
+- **Soft Knee Compression** - Quadratic interpolation for smooth transition
+- **Parallel Compression** - Built-in dry/wet mix control
+- **Batched Parameter Smoothing** - Zero zipper noise with efficient CPU usage
+- **Real-Time GR Meter** - 16-segment LED-style visualization
+- **Modern Dark UI** - Vibrant cyan accent with glow effects
 
-## 🎛️ Parameters
+## Parameters
 
 | Parameter | Range | Description |
 |-----------|-------|-------------|
@@ -34,7 +34,7 @@
 | **Makeup** | -12 to 24 dB | Output gain compensation |
 | **Mix** | 0 to 100% | Parallel compression blend |
 
-## 🔧 Building
+## Building
 
 ### Prerequisites
 
@@ -67,7 +67,7 @@ cmake --build cmake-build --config Release -j8
 | **AU** | `~/Library/Audio/Plug-Ins/Components/FIDI Comp.component` |
 | **Standalone** | `cmake-build/FIDIComp_artefacts/Release/Standalone/` |
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 FIDIComp/
@@ -76,40 +76,41 @@ FIDIComp/
 ├── JUCE/                       # JUCE framework
 └── Source/
     ├── PluginProcessor.cpp     # Audio routing & state management
-    ├── PluginEditor.cpp        # GUI layout (700×340)
+    ├── PluginEditor.cpp        # GUI layout (700x340)
     ├── Compressor.cpp          # DSP: envelope follower & gain
     ├── Parameters.cpp          # Coefficient calculation
     ├── Meter.cpp               # Gain reduction visualization
     └── LookAndFeel.cpp         # Custom knob styling
 ```
 
-## 🎨 DSP Architecture
+## DSP Architecture
 
 ```
-Input → Stereo Link → Envelope Follower → Soft Knee Gain → Mix → Makeup → Output
-            ↓                                    ↓
-       max(|L|,|R|)                       Smoothed GR → Meter
+Input -> Stereo Link -> Envelope Follower -> Soft Knee Gain -> Mix -> Makeup -> Output
+             |                                    |
+        max(|L|,|R|)                       Smoothed GR -> Meter
 ```
 
 **Key Design Decisions:**
 - One-pole envelope follower with attack/release selection
-- Quadratic soft knee interpolation
-- 30ms parameter smoothing on all controls
+- Quadratic soft knee interpolation for C1 continuity
+- Batched parameter smoothing (every 32 samples)
 - Atomic float for lock-free metering
+- noexcept and nodiscard annotations for safety
 
-## 📄 License
+## License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
-- [JUCE Framework](https://juce.com/) – Cross-platform audio plugin framework
+- [JUCE Framework](https://juce.com/) - Cross-platform audio plugin framework
 - Inspired by classic analog compressor designs
 
 ---
 
 <div align="center">
 
-**Made with ❤️ by FIDI**
+**Made by FIDI**
 
 </div>

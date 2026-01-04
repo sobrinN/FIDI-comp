@@ -52,21 +52,29 @@ envelope = coeff * (envelope - inputLevel) + inputLevel;
 attackCoeff = exp(-1.0 / (sampleRate * attackMs * 0.001))  // ~0.99+ for slow
 ```
 
-**Smoothing Coefficient** (speed-style):
+**Batched Parameter Smoothing** (every 32 samples for efficiency):
 ```cpp
-smoothingCoeff = 1.0 - exp(-1.0 / (sampleRate * 0.030))  // ~0.001 for 30ms
+if (++smoothingCounter >= 32) {
+    smoothingCounter = 0;
+    smoothedParam += batchCoeff * (targetParam - smoothedParam);
+}
 ```
 
-**Soft Knee** (quadratic interpolation):
+**Soft Knee** (quadratic interpolation for C1 continuity):
 - Below `threshold - halfKnee`: No compression
 - Above `threshold + halfKnee`: Full ratio compression
-- Inside knee: Interpolated effective ratio
+- Inside knee: `effectiveRatio = 1 + (ratio - 1) * kneeRatio²`
 
 ### Safety Features
 - NaN/Inf checks on gain reduction output
 - Gain reduction clamped to [0.0, 1.0]
 - Output sample NaN/Inf protection
 - `juce::ScopedNoDenormals` in processBlock
+
+### Code Quality
+- `[[nodiscard]]` on all getter functions
+- `noexcept` on performance-critical DSP methods
+- Single compressor instance for stereo-linked operation
 
 ## GUI Structure
 
@@ -93,7 +101,7 @@ smoothingCoeff = 1.0 - exp(-1.0 / (sampleRate * 0.030))  // ~0.001 for 30ms
 
 ```bash
 # Clone with JUCE submodule
-git clone --recursive https://github.com/sobrinN/FIDI-comp.git
+git clone --recursive https://github.com/sobrinn/FIDI-comp.git
 cd FIDI-comp/FIDIComp
 
 # Build with CMake
@@ -115,14 +123,14 @@ cmake --build cmake-build --config Release -j8
 
 ## Key Files Reference
 
-| File | Lines | Purpose |
-|------|-------|---------|
-| `PluginProcessor.cpp` | 289 | Audio routing, per-sample processing loop |
-| `Compressor.cpp` | 105 | Envelope + gain computation with safety |
-| `Parameters.cpp` | 63 | Sample-rate aware coefficient calculation |
-| `PluginEditor.cpp` | 173 | GUI layout, slider configuration |
-| `Meter.cpp` | 140 | Segmented LED meter with glow effects |
-| `LookAndFeel.cpp` | 155 | Custom rotary knob rendering |
+| File | Purpose |
+|------|---------|
+| `PluginProcessor.cpp` | Audio routing, per-sample processing loop |
+| `Compressor.cpp` | Envelope + gain computation with safety |
+| `Parameters.cpp` | Sample-rate aware coefficient calculation |
+| `PluginEditor.cpp` | GUI layout, slider configuration |
+| `Meter.cpp` | Segmented LED meter with sample-rate aware ballistics |
+| `LookAndFeel.cpp` | Custom rotary knob rendering |
 
 ## Dependencies
 

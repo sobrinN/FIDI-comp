@@ -1,10 +1,16 @@
 #include "Meter.h"
 
-//==============================================================================
 Meter::Meter(std::atomic<float>& gainReduction)
     : gainReductionAtomic(gainReduction)
 {
-    startTimerHz(30);  // 30 FPS refresh rate
+    // Calculate ballistics coefficients for timer rate
+    // Using one-pole filter: coeff = 1 - exp(-1 / (rate * time))
+    // Attack: ~50ms for responsiveness
+    // Release: ~300ms for readability
+    attackCoeff = 1.0f - std::exp(-1.0f / (timerRateHz * 0.050f));
+    releaseCoeff = 1.0f - std::exp(-1.0f / (timerRateHz * 0.300f));
+    
+    startTimerHz(static_cast<int>(timerRateHz));  // 30 FPS refresh rate
 }
 
 Meter::~Meter()

@@ -50,10 +50,10 @@ public:
 
     //==============================================================================
     /** Returns the APVTS for editor to create parameter attachments */
-    juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; }
+    [[nodiscard]] juce::AudioProcessorValueTreeState& getAPVTS() noexcept { return apvts; }
     
     /** Returns atomic gain reduction value for metering (0.0 to 1.0, where 1.0 = no reduction) */
-    std::atomic<float>& getGainReduction() { return gainReductionAtomic; }
+    [[nodiscard]] std::atomic<float>& getGainReduction() noexcept { return gainReductionAtomic; }
 
 private:
     //==============================================================================
@@ -63,8 +63,7 @@ private:
     //==============================================================================
     juce::AudioProcessorValueTreeState apvts;
     Parameters parameters;
-    Compressor compressorL;
-    Compressor compressorR;
+    Compressor compressor;  // Single instance for stereo-linked compression
     
     /** Atomic gain reduction for thread-safe metering */
     std::atomic<float> gainReductionAtomic{1.0f};

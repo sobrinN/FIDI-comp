@@ -13,7 +13,7 @@ Parameters::Parameters(juce::AudioProcessorValueTreeState& apvts)
 }
 
 //==============================================================================
-void Parameters::setSampleRate(double newSampleRate)
+void Parameters::setSampleRate(double newSampleRate) noexcept
 {
     sampleRate = newSampleRate;
     
@@ -28,7 +28,7 @@ void Parameters::setSampleRate(double newSampleRate)
 }
 
 //==============================================================================
-double Parameters::calculateCoefficient(double timeMs) const
+[[nodiscard]] double Parameters::calculateCoefficient(double timeMs) const noexcept
 {
     if (timeMs <= 0.0 || sampleRate <= 0.0)
         return 0.0;
@@ -39,7 +39,7 @@ double Parameters::calculateCoefficient(double timeMs) const
 }
 
 //==============================================================================
-void Parameters::update()
+void Parameters::update() noexcept
 {
     // Read raw parameters
     threshold = thresholdParam.load();

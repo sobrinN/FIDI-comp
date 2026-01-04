@@ -15,14 +15,14 @@ public:
 
     //==============================================================================
     /** Reset the compressor state (call when sample rate changes or playback starts) */
-    void reset();
+    void reset() noexcept;
 
     /**
      * Compute gain reduction for a given input level.
      * @param inputLevel Absolute value of input sample (or linked level for stereo)
      * @return Gain multiplier to apply (1.0 = no reduction, 0.5 = -6dB reduction)
      */
-    float computeGainReduction(float inputLevel);
+    [[nodiscard]] float computeGainReduction(float inputLevel) noexcept;
 
 private:
     //==============================================================================
@@ -31,7 +31,7 @@ private:
      * @param inputDb Input level in dB
      * @return Gain reduction in dB (positive value)
      */
-    float computeGainReductionDb(float inputDb) const;
+    [[nodiscard]] float computeGainReductionDb(float inputDb) const noexcept;
 
     //==============================================================================
     const Parameters& parameters;
@@ -47,13 +47,17 @@ private:
     float smoothedMakeup = 1.0f;
     double smoothedAttackCoeff = 0.01;
     double smoothedReleaseCoeff = 0.001;
+    
+    // Batch smoothing: update every N samples for efficiency
+    static constexpr int smoothingInterval = 32;
+    int smoothingCounter = 0;
 
 public:
     /** Get smoothed mix value (0-1) - call once per sample after computeGainReduction */
-    float getSmoothedMix() const { return smoothedMix; }
+    [[nodiscard]] float getSmoothedMix() const noexcept { return smoothedMix; }
     
     /** Get smoothed makeup gain (linear) - call once per sample after computeGainReduction */
-    float getSmoothedMakeup() const { return smoothedMakeup; }
+    [[nodiscard]] float getSmoothedMakeup() const noexcept { return smoothedMakeup; }
 
 private:
     //==============================================================================

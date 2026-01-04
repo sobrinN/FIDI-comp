@@ -15,10 +15,10 @@ public:
 
     //==============================================================================
     /** Set the sample rate for coefficient calculations */
-    void setSampleRate(double newSampleRate);
+    void setSampleRate(double newSampleRate) noexcept;
 
     /** Update all DSP coefficients from current parameter values */
-    void update();
+    void update() noexcept;
 
     //==============================================================================
     // DSP-ready values (updated by update())
@@ -36,7 +36,7 @@ public:
 private:
     //==============================================================================
     /** Calculate one-pole filter coefficient from time in milliseconds */
-    double calculateCoefficient(double timeMs) const;
+    [[nodiscard]] double calculateCoefficient(double timeMs) const noexcept;
 
     //==============================================================================
     double sampleRate = 44100.0;
