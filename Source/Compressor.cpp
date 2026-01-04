@@ -34,20 +34,22 @@ float Compressor::computeGainReduction(float inputLevel)
     smoothedAttackCoeff += smoothCoeff * (parameters.attackCoeff - smoothedAttackCoeff);
     smoothedReleaseCoeff += smoothCoeff * (parameters.releaseCoeff - smoothedReleaseCoeff);
 
-    // Convert input level to dB
-    // Add small value to avoid log(0)
+    // Envelope follower operates in LINEAR domain (not dB!)
+    // This matches the skill reference pattern
+    double coeff = (inputLevel > envelope) ? smoothedAttackCoeff : smoothedReleaseCoeff;
+    envelope = coeff * (envelope - inputLevel) + inputLevel;
+    
+    // Ensure envelope doesn't go negative
+    if (envelope < 0.0)
+        envelope = 0.0;
+
+    // AFTER smoothing: convert envelope to dB for gain computation
     constexpr float minLevel = 1e-10f;
-    float inputDb = juce::Decibels::gainToDecibels(std::max(inputLevel, minLevel));
+    float envelopeDb = juce::Decibels::gainToDecibels(
+        static_cast<float>(std::max(envelope, static_cast<double>(minLevel))));
 
-    // Envelope follower (one-pole filter) using SMOOTHED coefficients
-    // Attack when input is higher than envelope, release when lower
-    // Formula: envelope = input + coeff * (envelope - input)
-    // Where coeff close to 1.0 = slow, coeff close to 0.0 = fast
-    double coeff = (inputDb > envelope) ? smoothedAttackCoeff : smoothedReleaseCoeff;
-    envelope = inputDb + coeff * (envelope - inputDb);
-
-    // Compute gain reduction based on envelope
-    float gainReductionDb = computeGainReductionDb(static_cast<float>(envelope));
+    // Compute gain reduction based on envelope (in dB domain)
+    float gainReductionDb = computeGainReductionDb(envelopeDb);
 
     // Convert dB reduction to linear gain
     // gainReductionDb is positive (e.g., 6dB of reduction)
