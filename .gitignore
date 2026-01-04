@@ -1,0 +1,20 @@
+# Build outputs
+cmake-build/
+Builds/
+
+# JUCE (cloned separately)
+JUCE/
+
+# IDE files
+*.xcworkspace
+*.xcuserdata
+.vs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Compiled plugins
+*.vst3
+*.component
+*.app

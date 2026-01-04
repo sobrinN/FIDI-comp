@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="FdCp01" name="FIDI Comp" projectType="audioplug" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="0" jucerFormatVersion="1"
+              bundleIdentifier="com.fidi.FIDIComp" pluginFormats="buildAU,buildVST3"
+              pluginName="FIDI Comp" pluginDesc="Professional Dynamics Compressor"
+              pluginManufacturer="FIDI" pluginManufacturerCode="FIDI"
+              pluginCode="FdCp" projectLineFeed="&#10;" pluginVST3Category="Dynamics"
+              companyWebsite="https://fidi.audio" version="1.0.0" pluginAUIsSandboxSafe="1"
+              cppLanguageStandard="17">
+  <MAINGROUP id="FdCpMn" name="FIDI Comp">
+    <GROUP id="{FIDICOMP-SRC-GROUP}" name="Source">
+      <FILE id="FdPrH1" name="PluginProcessor.h" compile="0" resource="0" file="Source/PluginProcessor.h"/>
+      <FILE id="FdPrC1" name="PluginProcessor.cpp" compile="1" resource="0" file="Source/PluginProcessor.cpp"/>
+      <FILE id="FdEdH1" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="FdEdC1" name="PluginEditor.cpp" compile="1" resource="0" file="Source/PluginEditor.cpp"/>
+      <FILE id="FdCmH1" name="Compressor.h" compile="0" resource="0" file="Source/Compressor.h"/>
+      <FILE id="FdCmC1" name="Compressor.cpp" compile="1" resource="0" file="Source/Compressor.cpp"/>
+      <FILE id="FdPaH1" name="Parameters.h" compile="0" resource="0" file="Source/Parameters.h"/>
+      <FILE id="FdPaC1" name="Parameters.cpp" compile="1" resource="0" file="Source/Parameters.cpp"/>
+      <FILE id="FdMeH1" name="Meter.h" compile="0" resource="0" file="Source/Meter.h"/>
+      <FILE id="FdMeC1" name="Meter.cpp" compile="1" resource="0" file="Source/Meter.cpp"/>
+      <FILE id="FdLfH1" name="LookAndFeel.h" compile="0" resource="0" file="Source/LookAndFeel.h"/>
+      <FILE id="FdLfC1" name="LookAndFeel.cpp" compile="1" resource="0" file="Source/LookAndFeel.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
+  <EXPORTFORMATS>
+    <XCODE_MAC targetFolder="Builds/MacOSX">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="FIDI Comp"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="FIDI Comp"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="JUCE/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+    <VS2022 targetFolder="Builds/VisualStudio2022">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug"/>
+        <CONFIGURATION isDebug="0" name="Release"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2022>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+  </MODULES>
+</JUCERPROJECT>
