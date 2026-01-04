@@ -79,17 +79,17 @@ float Compressor::computeGainReductionDb(float inputDb) const
         return gainReductionDb;
     }
 
-    // Inside knee region: gradual transition using quadratic interpolation
-    // This creates a smooth curve from no compression to full compression
-    float kneePosition = (inputDb - (threshold - halfKnee)) / kneeWidth;
+    // Inside knee region: gradual transition using interpolated effective ratio
+    // This is the correct soft knee algorithm from the skill reference
+    float kneePosition = inputDb - (threshold - halfKnee);
+    float kneeRatio = kneePosition / kneeWidth;  // 0 to 1 within knee
     
-    // Quadratic blend factor (0 to 1)
-    float kneeBlend = kneePosition * kneePosition;
+    // Linearly interpolate ratio from 1:1 to full ratio
+    float effectiveRatio = 1.0f + (ratio - 1.0f) * kneeRatio;
     
-    // Calculate what the gain reduction would be at full compression
-    float overDb = inputDb - threshold + halfKnee;
-    float fullCompressionGr = overDb - (overDb / ratio);
+    // Calculate gain reduction using interpolated ratio
+    float overDb = kneePosition;  // Distance into knee region
+    float gainReductionDb = overDb - (overDb / effectiveRatio);
     
-    // Blend from 0 (no compression) to full compression
-    return fullCompressionGr * kneeBlend;
+    return gainReductionDb;
 }
